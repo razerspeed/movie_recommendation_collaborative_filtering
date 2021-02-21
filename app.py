@@ -37,24 +37,29 @@ def size_str_to_int(x):
     return float("inf") if x == 'original' else int(x[1:])
 max_size = max(sizes, key=size_str_to_int)
 
-
+no=Image.open('no.jpg')
 
 def fetch_image(imdbid):
-    IMG_PATTERN = 'http://api.themoviedb.org/3/movie/{imdbid}/images?api_key={key}'
-    imdbid="{:07d}".format(imdbid)
-    imdbid_full='tt'+str(imdbid)
-    # st.write(imdbid_full)
-    r = requests.get(IMG_PATTERN.format(key=KEY, imdbid=f'{imdbid_full}'))
-    api_response = r.json()
-    # st.write(api_response)
-    posters = api_response['posters'][0]
-    url = base_url + max_size + posters['file_path']
-    r = requests.get(url)
-    im = Image.open(BytesIO(r.content))
-    return im
+    try:
+        IMG_PATTERN = 'http://api.themoviedb.org/3/movie/{imdbid}/images?api_key={key}'
+        imdbid="{:07d}".format(imdbid)
+        imdbid_full='tt'+str(imdbid)
+        # st.write(imdbid_full)
+        r = requests.get(IMG_PATTERN.format(key=KEY, imdbid=f'{imdbid_full}'))
+        api_response = r.json()
+        # st.write(api_response)
+        posters = api_response['posters'][0]
+        url = base_url + max_size + posters['file_path']
+        r = requests.get(url)
+        im = Image.open(BytesIO(r.content))
+        return im
+    except:
+        return no
+
 
 
 if st.button('Done Selection'):
+
     if options:
         st.write('Please wait fetching data...')
         movies_df = pd.DataFrame(columns=["distance", 'suggestions', 'rank'])

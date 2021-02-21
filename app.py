@@ -7,20 +7,6 @@ import math
 import pickle
 import scipy.sparse
 
-lookup_dataframe=pd.read_csv('final_list.csv',index_col='index_col')
-
-max_no_of_suggestion = st.sidebar.select_slider('How many suggestion you want' ,[x for x in range(10) if x],value=9)
-st.sidebar.write("Selected :",max_no_of_suggestion)
-
-options=st.multiselect('Select Movie', lookup_dataframe.title.values)
-movie_sparse = scipy.sparse.load_npz('sparse_matrix.npz')
-model = pickle.load(open("model.save", 'rb'))
-
-if options:
-    for i in range(len(options)):
-        st.write('You selected:', options[i])
-
-
 
 #api configuration
 CONFIG_PATTERN = 'http://api.themoviedb.org/3/configuration?api_key={key}'
@@ -37,7 +23,28 @@ def size_str_to_int(x):
     return float("inf") if x == 'original' else int(x[1:])
 max_size = max(sizes, key=size_str_to_int)
 
-no=Image.open('no.jpg')
+
+
+
+max_no_of_suggestion = st.sidebar.select_slider('How many suggestion you want' ,[x for x in range(10) if x],value=9)
+st.sidebar.write("Selected :",max_no_of_suggestion)
+
+lookup_dataframe=pd.read_csv('final_list.csv',index_col='index_col')
+
+
+
+options=st.multiselect('Select Movie', lookup_dataframe.title.values)
+
+
+
+if options:
+    for i in range(len(options)):
+        st.write('You selected:', options[i])
+
+
+
+
+
 
 def fetch_image(imdbid):
     try:
@@ -61,6 +68,9 @@ def fetch_image(imdbid):
 if st.button('Done Selection'):
 
     if options:
+        movie_sparse = scipy.sparse.load_npz('sparse_matrix.npz')
+        model = pickle.load(open("model.save", 'rb'))
+        no = Image.open('no.jpg')
         st.write('Please wait fetching data...')
         movies_df = pd.DataFrame(columns=["distance", 'suggestions', 'rank'])
         for i in options:
@@ -126,7 +136,15 @@ if st.button('Done Selection'):
                 if i>=max_no_of_suggestion:
                     y=False
                     break
+        del lookup_dataframe
+        del movie_sparse
+        del model
+        del no
+        del movies_df,temp_df,distances,suggestions
+        del images,title,title_temp
+        import gc
+
+        gc.collect()
 
     else:
         st.write('Select a movie then press Done Selecting')
-

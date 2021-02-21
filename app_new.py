@@ -56,6 +56,7 @@ def fetch_image(imdbid):
 
 if st.button('Done Selection'):
     if options:
+        st.write('Please wait fetching data...')
         movies_df = pd.DataFrame(columns=["distance", 'suggestions', 'rank'])
         for i in options:
             print(i)

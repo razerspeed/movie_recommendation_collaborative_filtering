@@ -30,7 +30,7 @@ max_no_of_suggestion = st.sidebar.select_slider('How many suggestion you want' ,
 st.sidebar.write("Selected :",max_no_of_suggestion)
 
 lookup_dataframe=pd.read_csv('final_list.csv',index_col='index_col')
-
+lookup_dataframe.sort_values('imdbId',ascending=False,inplace=True)
 
 
 options=st.multiselect('Select Movie', lookup_dataframe.title.values)

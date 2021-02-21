@@ -65,7 +65,7 @@ def fetch_image(imdbid):
 
 
 
-if st.button('Done Selection'):
+if st.button('Done Selecting'):
 
     if options:
         st.write('Please wait fetching data...')

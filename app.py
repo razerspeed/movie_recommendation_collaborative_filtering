@@ -68,10 +68,11 @@ def fetch_image(imdbid):
 if st.button('Done Selection'):
 
     if options:
+        st.write('Please wait fetching data...')
         movie_sparse = scipy.sparse.load_npz('sparse_matrix.npz')
         model = pickle.load(open("model.save", 'rb'))
         no = Image.open('no.jpg')
-        st.write('Please wait fetching data...')
+        
         movies_df = pd.DataFrame(columns=["distance", 'suggestions', 'rank'])
         for i in options:
             print(i)
